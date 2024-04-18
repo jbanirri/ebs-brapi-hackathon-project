@@ -1,8 +1,9 @@
-import Image from "next/image";
+import DataBrowser from "./databrowser";
 
 const brapiUrl = 'https://cbbrapi.local/brapi/v2/'
 
 async function fetchFromAPI(endpoint, method, body) {
+  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
   const response = await fetch(`${brapiUrl}${endpoint}`, {
     method: method,
     headers: {
@@ -15,36 +16,40 @@ async function fetchFromAPI(endpoint, method, body) {
   return response.json()
 }
 
-async function getSeedlots() {
-  const data = {
-    amount: "1000"
+const columns = [
+  {
+    key: "actions",
+    label: ""
+  },
+  {
+    key: "programName",
+    label: "Program Name"
+  },
+  {
+    key: "seedlotName",
+    label: "Seedlot Name"
+  },
+  {
+    key: "amount",
+    label: "Amount"
+  },
+  {
+    key: "units",
+    label: "Units"
   }
-  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
-  const response = await fetch('https://cbbrapi.local/brapi/v2/seedlots/12787822', {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: JSON.stringify(data)
-  })
-
-  return response.json()
-}
-
+]
 
 
 export default async function Home() {
-  const seedlots = await fetchFromAPI('seedlots/12787822','PUT',{
-    amount: "1002"
-  })
+  const seedlots = await fetchFromAPI('seedlots','GET')
   // console.log(seedlots.result)
   const result = seedlots.result
-  console.log(result)
+  console.log(seedlots)
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1>Super Cool Inventory BrApp</h1>
-      <h2>{JSON.stringify(result)}</h2>
+      {/* <h2>{JSON.stringify(result)}</h2> */}
+      <div>{DataBrowser(columns,result.data)}</div>
       {/* <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;
