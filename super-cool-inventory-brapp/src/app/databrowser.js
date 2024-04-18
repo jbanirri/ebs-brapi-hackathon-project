@@ -1,15 +1,12 @@
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 const columns = [
-    {
-      key: "actions",
-      label: ""
-    },
-    {
-      key: "programName",
-      label: "Program Name"
-    },
+    // {
+    //   key: "actions",
+    //   label: ""
+    // },
     {
       key: "seedlotName",
       label: "Seedlot Name"
@@ -30,12 +27,24 @@ const columns = [
 
 function DataBrowser(rows) {
   return (
+    
     <Table class="table" striped bordered hover>
       <thead>
         <tr>
+            <th></th>
             {
                 columns && columns.map((item) => (
-                    <th key={item.key}>{item.label}</th>
+                    <th key={item.key}>
+                        <Form.Label>{item.label}</Form.Label>
+                        <Form.Control
+                            type="text"
+                            id={item.seedlotDbId}
+                        />
+                        {/* <Form.Text id="passwordHelpBlock" muted>
+                            Your password must be 8-20 characters long, contain letters and numbers,
+                            and must not contain spaces, special characters, or emoji.
+                        </Form.Text> */}
+                    </th>
                 ))
             }
         </tr>
@@ -47,7 +56,6 @@ function DataBrowser(rows) {
                     <td>
                         <Button class="button-10">Update</Button>
                     </td>
-                    <td>{row.programName}</td>
                     <td>{row.seedlotName}</td>
                     <td>{row.contentMixture[0].germplasmName}</td>
                     <td>{row.amount}</td>
