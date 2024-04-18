@@ -2,14 +2,7 @@ import Image from "next/image";
 
 const brapiUrl = 'https://cbbrapi.local/brapi/v2/'
 
-/**
- * Fetch data from API
- * @param {string} endpoint API endpoint to fetch from
- * @param {string} method API call method
- * @param {object} body request body
- * @returns 
- */
-async function fetchFromAPI(endpoint, method, body = {}) {
+async function fetchFromAPI(endpoint, method, body) {
   const response = await fetch(`${brapiUrl}${endpoint}`, {
     method: method,
     headers: {
@@ -22,11 +15,32 @@ async function fetchFromAPI(endpoint, method, body = {}) {
   return response.json()
 }
 
+async function getSeedlots() {
+  const data = {
+    amount: "1000"
+  }
+  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+  const response = await fetch('https://cbbrapi.local/brapi/v2/seedlots/12787822', {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(data)
+  })
+
+  return response.json()
+}
+
+
+
 export default async function Home() {
   const seedlots = await fetchFromAPI('seedlots/12787822','PUT',{
     amount: "1002"
   })
-  const result = [seedlots.result]
+  // console.log(seedlots.result)
+  const result = seedlots.result
+  console.log(result)
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1>Super Cool Inventory BrApp</h1>
@@ -136,7 +150,6 @@ export default async function Home() {
           </p>
         </a>
       </div> */}
-      
     </main>
   );
 }
