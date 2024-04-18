@@ -1,9 +1,37 @@
 import Image from "next/image";
 
-export default function Home() {
+const brapiUrl = 'https://cbbrapi.local/brapi/v2/'
+
+/**
+ * Fetch data from API
+ * @param {string} endpoint API endpoint to fetch from
+ * @param {string} method API call method
+ * @param {object} body request body
+ * @returns 
+ */
+async function fetchFromAPI(endpoint, method, body = {}) {
+  const response = await fetch(`${brapiUrl}${endpoint}`, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(body)
+  })
+
+  return response.json()
+}
+
+export default async function Home() {
+  const seedlots = await fetchFromAPI('seedlots/12787822','PUT',{
+    amount: "1002"
+  })
+  const result = [seedlots.result]
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
+      <h1>Super Cool Inventory BrApp</h1>
+      <h2>{JSON.stringify(result)}</h2>
+      {/* <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;
           <code className="font-mono font-bold">src/app/page.js</code>
@@ -107,7 +135,8 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
-      </div>
+      </div> */}
+      
     </main>
   );
 }
